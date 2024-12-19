@@ -2,37 +2,126 @@
 #include <iostream>
 using namespace std;
 
-void Tree::insert(Node* node, int value)
+template<typename T>
+void Tree<T>::insert(Node*& node, T value)
 {
-	if (!node) return;
+    if (!node)
+    {
+        node = new Node(value);
+        return;
+    }
 
-	if (value > node->value)
-	{
-		insert(node->right, value);
-	}
-	else if (value < node->value)
-	{
-		insert(node->left, value);
-	}
+    if (value > node->value)
+        insert(node->right, value);
+    else if (value < node->value)
+        insert(node->left, value);
 }
 
-void Tree::print(Node* Node) const
+template<typename T>
+void Tree<T>::print(Node* node) const
 {
-	if (!Node) return;
+    if (!node) return;
 
-	print(Node->left);
-	print(Node->right);
-	cout << Node->value << " ";
+    print(node->left);
+    cout << node->value << " ";
+    print(node->right);
 }
 
-void Tree::insterd(int value)
+template<typename T>
+void Tree<T>::clear(Node* node)
 {
-	if (root == nullptr) root = new Node(value);
+    if (!node) return;
 
-	insert (root, value);
+    clear(node->left);
+    clear(node->right);
+    delete node;
 }
 
-void Tree::print() const
+template<typename T>
+typename Tree<T>::Node* Tree<T>::erase(Node* node, T key)
 {
-	print(root);
+    if (!node) return nullptr;
+
+    if (key < node->value)
+    {
+        node->left = erase(node->left, key);
+    }
+    else if (key > node->value)
+    {
+        node->right = erase(node->right, key);
+    }
+    else
+    {
+        if (!node->left)
+        {
+            Node* temp = node->right;
+            delete node;
+            return temp;
+        }
+        else if (!node->right)
+        {
+            Node* temp = node->left;
+            delete node;
+            return temp;
+        }
+        else
+        {
+            Node* successor = node->right;
+            while (successor->left)
+                successor = successor->left;
+
+            node->value = successor->value;
+            node->right = erase(node->right, successor->value);
+        }
+    }
+    return node;
 }
+
+template<typename T>
+Tree<T>::Tree(const Tree& other) : root(nullptr)
+{
+    if (other.root)
+        insert(root, other.root->value);
+}
+
+template<typename T>
+Tree<T>& Tree<T>::operator=(const Tree& other)
+{
+    if (this == &other) return *this;
+
+    clear(root);
+    root = nullptr;
+
+    if (other.root)
+        insert(root, other.root->value);
+
+    return *this;
+}
+
+template<typename T>
+Tree<T>::~Tree()
+{
+    clear(root);
+}
+
+template<typename T>
+void Tree<T>::insert(T value)
+{
+    insert(root, value);
+}
+
+template<typename T>
+void Tree<T>::print() const
+{
+    print(root);
+    cout << endl;
+}
+
+template<typename T>
+void Tree<T>::erase(T key)
+{
+    root = erase(root, key);
+}
+
+template class Tree<int>;
+template class Tree<string>;
