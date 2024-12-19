@@ -1,21 +1,30 @@
 #pragma once
+template<typename T>
 class Tree
 {
-	class Node
-	{
-	public:
-		int value;
-		Node* left;
-		Node* right;
-		Node()
-			: value(0), left(nullptr), right(nullptr) {}
-		Node(int value) : value(0), left(nullptr), right(nullptr) {}
-	};
-	Node* root;
-	void insert(Node* node, int value);
-	void print(Node* Node) const;
+    class Node
+    {
+    public:
+        T value;
+        Node* left;
+        Node* right;
+        Node(T value) : value(value), left(nullptr), right(nullptr) {}
+    };
+
+    Node* root;
+
+    void insert(Node*& node, T value);
+    void print(Node* node) const;
+    void clear(Node* node);
+    Node* erase(Node* node, T key);
+
 public:
-	Tree() : root(nullptr) {}
-	void insterd(int value);
-	void print() const;
+    Tree() : root(nullptr) {}
+    Tree(const Tree& other);
+    Tree& operator=(const Tree& other);
+    ~Tree();
+
+    void insert(T value);
+    void print() const;
+    void erase(T key);
 };
