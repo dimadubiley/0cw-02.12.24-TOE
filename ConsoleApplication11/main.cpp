@@ -1,17 +1,30 @@
 #include <iostream>
 #include "Tree.h"
-#include <string>
 
 using namespace std;
 
-
 int main()
 {
-	Tree obj;
-	obj.insterd(5);
-	obj.insterd(2);
-	obj.insterd(4);
-	obj.insterd(70);
+    Tree<int> tree;
 
-	obj.print();
+    tree.insert(5);
+    tree.insert(2);
+    tree.insert(4);
+    tree.insert(70);
+
+    cout << "Tree elements: ";
+    tree.print();
+
+    tree.erase(4);
+    cout << "After erasing 4: ";
+    tree.print();
+
+    Tree<int> copyTree = tree;
+    cout << "Copied tree: ";
+    copyTree.print();
+
+    Tree<int> assignedTree;
+    assignedTree = tree;
+    cout << "Assigned tree: ";
+    assignedTree.print();
 }
